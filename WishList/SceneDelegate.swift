@@ -20,6 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = UINavigationController(rootViewController: HomeViewController())
+//        window.tintColor = .black
         self.window = window
         window.makeKeyAndVisible()
     }

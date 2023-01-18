@@ -8,24 +8,72 @@
 
 /* Begin PBXBuildFile section */
 		413C2A38CF66178581C2078B /* Pods_WishList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B983BD440F202D4F2B0E0909 /* Pods_WishList.framework */; };
+		AA08DB7B29547F0800D17ABE /* WLItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA08DB7A29547F0800D17ABE /* WLItemImageView.swift */; };
+		AA08DB7D2954856D00D17ABE /* WLItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA08DB7C2954856D00D17ABE /* WLItemListCell.swift */; };
 		AA166D302954718600A8BE77 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA166D2F2954718600A8BE77 /* AppDelegate.swift */; };
 		AA166D322954718600A8BE77 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA166D312954718600A8BE77 /* SceneDelegate.swift */; };
 		AA166D342954718600A8BE77 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA166D332954718600A8BE77 /* HomeViewController.swift */; };
-		AA166D3A2954718600A8BE77 /* WishList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AA166D382954718600A8BE77 /* WishList.xcdatamodeld */; };
-		AA166D3C2954718800A8BE77 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA166D3B2954718800A8BE77 /* Assets.xcassets */; };
-		AA166D3F2954718800A8BE77 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA166D3D2954718800A8BE77 /* LaunchScreen.storyboard */; };
+		AA2EBB39296708C400C92BDF /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2EBB38296708C400C92BDF /* Item.swift */; };
+		AA2EBB3B29670CA300C92BDF /* UICollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2EBB3A29670CA300C92BDF /* UICollectionView+Extensions.swift */; };
+		AA476DDC295C339500DDD81B /* WLLabelWithIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA476DDB295C339500DDD81B /* WLLabelWithIcon.swift */; };
+		AA476DDF295C555300DDD81B /* ItemsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA476DDE295C555300DDD81B /* ItemsViewModel.swift */; };
+		AA476DE1295C670E00DDD81B /* ItemDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA476DE0295C670E00DDD81B /* ItemDetailsViewController.swift */; };
+		AA476DE7295C855800DDD81B /* WLImageUploadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA476DE6295C855800DDD81B /* WLImageUploadButton.swift */; };
+		AA541FA6296D5E9800C9E782 /* WLTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA541FA5296D5E9800C9E782 /* WLTextField.swift */; };
+		AA541FA8296D7F7D00C9E782 /* WLNavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA541FA7296D7F7D00C9E782 /* WLNavigationBarView.swift */; };
+		AA541FAA296D814600C9E782 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA541FA9296D814600C9E782 /* UIFont+Extensions.swift */; };
+		AA874E062977E16600A0DB9E /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA874E052977E16600A0DB9E /* CoreDataManager.swift */; };
+		AA8DC9192965C89E008D3596 /* WishList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AA8E4F452965BAFB00107FE6 /* WishList.xcdatamodeld */; };
+		AA8DC91A2965C922008D3596 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA166D3B2954718800A8BE77 /* Assets.xcassets */; };
+		AA8DC91B2965C927008D3596 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA166D3D2954718800A8BE77 /* LaunchScreen.storyboard */; };
+		AA922183296C4FA000714286 /* NewItemCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA922182296C4FA000714286 /* NewItemCategoryViewController.swift */; };
+		AAA6802B297005ED0035BF85 /* WLEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6802A297005ED0035BF85 /* WLEmptyStateView.swift */; };
+		AAA6802D2970060D0035BF85 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6802C2970060D0035BF85 /* TestViewController.swift */; };
+		AAA6802F29700D0B0035BF85 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6802E29700D0B0035BF85 /* HomeViewModel.swift */; };
+		AAA6803129701E7A0035BF85 /* WishlistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6803029701E7A0035BF85 /* WishlistViewController.swift */; };
+		AAA6803329701F8C0035BF85 /* WishlistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6803229701F8C0035BF85 /* WishlistViewModel.swift */; };
+		AAA68035297030400035BF85 /* WLWishlistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA68034297030400035BF85 /* WLWishlistCollectionViewCell.swift */; };
+		AAA68037297038700035BF85 /* ItemFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA68036297038700035BF85 /* ItemFilter.swift */; };
+		AAA68039297038950035BF85 /* ItemSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA68038297038950035BF85 /* ItemSort.swift */; };
+		AAA6803B29704DC50035BF85 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6803A29704DC50035BF85 /* UIImage+Extensions.swift */; };
+		AAD65D4129549A610089FC85 /* NewItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD65D4029549A610089FC85 /* NewItemViewController.swift */; };
+		AADF2083296EB5340082732C /* WLEditButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADF2082296EB5340082732C /* WLEditButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8AC7B95895FF8C2F2D6141E5 /* Pods-WishList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WishList.release.xcconfig"; path = "Target Support Files/Pods-WishList/Pods-WishList.release.xcconfig"; sourceTree = "<group>"; };
+		AA08DB7A29547F0800D17ABE /* WLItemImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLItemImageView.swift; sourceTree = "<group>"; };
+		AA08DB7C2954856D00D17ABE /* WLItemListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLItemListCell.swift; sourceTree = "<group>"; };
 		AA166D2C2954718500A8BE77 /* WishList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WishList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA166D2F2954718600A8BE77 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA166D312954718600A8BE77 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		AA166D332954718600A8BE77 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		AA166D392954718600A8BE77 /* WishList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WishList.xcdatamodel; sourceTree = "<group>"; };
 		AA166D3B2954718800A8BE77 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA166D3E2954718800A8BE77 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA166D402954718800A8BE77 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA2EBB38296708C400C92BDF /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		AA2EBB3A29670CA300C92BDF /* UICollectionView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extensions.swift"; sourceTree = "<group>"; };
+		AA476DDB295C339500DDD81B /* WLLabelWithIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLLabelWithIcon.swift; sourceTree = "<group>"; };
+		AA476DDE295C555300DDD81B /* ItemsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsViewModel.swift; sourceTree = "<group>"; };
+		AA476DE0295C670E00DDD81B /* ItemDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailsViewController.swift; sourceTree = "<group>"; };
+		AA476DE6295C855800DDD81B /* WLImageUploadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLImageUploadButton.swift; sourceTree = "<group>"; };
+		AA541FA5296D5E9800C9E782 /* WLTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLTextField.swift; sourceTree = "<group>"; };
+		AA541FA7296D7F7D00C9E782 /* WLNavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLNavigationBarView.swift; sourceTree = "<group>"; };
+		AA541FA9296D814600C9E782 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
+		AA874E052977E16600A0DB9E /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		AA8E4F462965BAFB00107FE6 /* WishList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WishList.xcdatamodel; sourceTree = "<group>"; };
+		AA922182296C4FA000714286 /* NewItemCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemCategoryViewController.swift; sourceTree = "<group>"; };
+		AAA6802A297005ED0035BF85 /* WLEmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLEmptyStateView.swift; sourceTree = "<group>"; };
+		AAA6802C2970060D0035BF85 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		AAA6802E29700D0B0035BF85 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		AAA6803029701E7A0035BF85 /* WishlistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistViewController.swift; sourceTree = "<group>"; };
+		AAA6803229701F8C0035BF85 /* WishlistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistViewModel.swift; sourceTree = "<group>"; };
+		AAA68034297030400035BF85 /* WLWishlistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLWishlistCollectionViewCell.swift; sourceTree = "<group>"; };
+		AAA68036297038700035BF85 /* ItemFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFilter.swift; sourceTree = "<group>"; };
+		AAA68038297038950035BF85 /* ItemSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSort.swift; sourceTree = "<group>"; };
+		AAA6803A29704DC50035BF85 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		AAD65D4029549A610089FC85 /* NewItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemViewController.swift; sourceTree = "<group>"; };
+		AADF2082296EB5340082732C /* WLEditButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WLEditButton.swift; sourceTree = "<group>"; };
 		B983BD440F202D4F2B0E0909 /* Pods_WishList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WishList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8040C5610A5DBF0356567A0 /* Pods-WishList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WishList.debug.xcconfig"; path = "Target Support Files/Pods-WishList/Pods-WishList.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -50,6 +98,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AA08DB7929547EF700D17ABE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA08DB7A29547F0800D17ABE /* WLItemImageView.swift */,
+				AA08DB7C2954856D00D17ABE /* WLItemListCell.swift */,
+				AA476DDB295C339500DDD81B /* WLLabelWithIcon.swift */,
+				AA476DE6295C855800DDD81B /* WLImageUploadButton.swift */,
+				AA541FA5296D5E9800C9E782 /* WLTextField.swift */,
+				AA541FA7296D7F7D00C9E782 /* WLNavigationBarView.swift */,
+				AADF2082296EB5340082732C /* WLEditButton.swift */,
+				AAA6802A297005ED0035BF85 /* WLEmptyStateView.swift */,
+				AAA68034297030400035BF85 /* WLWishlistCollectionViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		AA166D232954718500A8BE77 = {
 			isa = PBXGroup;
 			children = (
@@ -71,15 +135,63 @@
 		AA166D2E2954718500A8BE77 /* WishList */ = {
 			isa = PBXGroup;
 			children = (
+				AA2C61662966BBB2000A1A43 /* Model */,
+				AA08DB7929547EF700D17ABE /* Views */,
+				AA476DDD295C554300DDD81B /* ViewModel */,
+				AAA68027296FF9470035BF85 /* ViewControllers */,
+				AAA68026296FF9280035BF85 /* Utils */,
 				AA166D2F2954718600A8BE77 /* AppDelegate.swift */,
 				AA166D312954718600A8BE77 /* SceneDelegate.swift */,
-				AA166D332954718600A8BE77 /* HomeViewController.swift */,
 				AA166D3B2954718800A8BE77 /* Assets.xcassets */,
 				AA166D3D2954718800A8BE77 /* LaunchScreen.storyboard */,
+				AA8E4F452965BAFB00107FE6 /* WishList.xcdatamodeld */,
 				AA166D402954718800A8BE77 /* Info.plist */,
-				AA166D382954718600A8BE77 /* WishList.xcdatamodeld */,
 			);
 			path = WishList;
+			sourceTree = "<group>";
+		};
+		AA2C61662966BBB2000A1A43 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				AA2EBB38296708C400C92BDF /* Item.swift */,
+				AAA68036297038700035BF85 /* ItemFilter.swift */,
+				AAA68038297038950035BF85 /* ItemSort.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AA476DDD295C554300DDD81B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				AA476DDE295C555300DDD81B /* ItemsViewModel.swift */,
+				AAA6802E29700D0B0035BF85 /* HomeViewModel.swift */,
+				AAA6803229701F8C0035BF85 /* WishlistViewModel.swift */,
+				AA874E052977E16600A0DB9E /* CoreDataManager.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		AAA68026296FF9280035BF85 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				AA2EBB3A29670CA300C92BDF /* UICollectionView+Extensions.swift */,
+				AA541FA9296D814600C9E782 /* UIFont+Extensions.swift */,
+				AAA6803A29704DC50035BF85 /* UIImage+Extensions.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		AAA68027296FF9470035BF85 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				AAA6802C2970060D0035BF85 /* TestViewController.swift */,
+				AA166D332954718600A8BE77 /* HomeViewController.swift */,
+				AAD65D4029549A610089FC85 /* NewItemViewController.swift */,
+				AA476DE0295C670E00DDD81B /* ItemDetailsViewController.swift */,
+				AA922182296C4FA000714286 /* NewItemCategoryViewController.swift */,
+				AAA6803029701E7A0035BF85 /* WishlistViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		FEA7D135F22EA8F5A4277B97 /* Pods */ = {
@@ -151,8 +263,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA166D3F2954718800A8BE77 /* LaunchScreen.storyboard in Resources */,
-				AA166D3C2954718800A8BE77 /* Assets.xcassets in Resources */,
+				AA8DC91B2965C927008D3596 /* LaunchScreen.storyboard in Resources */,
+				AA8DC91A2965C922008D3596 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,10 +317,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA166D3A2954718600A8BE77 /* WishList.xcdatamodeld in Sources */,
+				AA8DC9192965C89E008D3596 /* WishList.xcdatamodeld in Sources */,
+				AADF2083296EB5340082732C /* WLEditButton.swift in Sources */,
+				AA541FA6296D5E9800C9E782 /* WLTextField.swift in Sources */,
+				AA476DE7295C855800DDD81B /* WLImageUploadButton.swift in Sources */,
+				AA2EBB3B29670CA300C92BDF /* UICollectionView+Extensions.swift in Sources */,
+				AA541FA8296D7F7D00C9E782 /* WLNavigationBarView.swift in Sources */,
+				AAA68035297030400035BF85 /* WLWishlistCollectionViewCell.swift in Sources */,
+				AAA6803329701F8C0035BF85 /* WishlistViewModel.swift in Sources */,
+				AAA68039297038950035BF85 /* ItemSort.swift in Sources */,
 				AA166D342954718600A8BE77 /* HomeViewController.swift in Sources */,
+				AAA68037297038700035BF85 /* ItemFilter.swift in Sources */,
+				AAA6802D2970060D0035BF85 /* TestViewController.swift in Sources */,
+				AA2EBB39296708C400C92BDF /* Item.swift in Sources */,
+				AA476DE1295C670E00DDD81B /* ItemDetailsViewController.swift in Sources */,
+				AA476DDF295C555300DDD81B /* ItemsViewModel.swift in Sources */,
+				AAA6802B297005ED0035BF85 /* WLEmptyStateView.swift in Sources */,
+				AA476DDC295C339500DDD81B /* WLLabelWithIcon.swift in Sources */,
+				AAA6803129701E7A0035BF85 /* WishlistViewController.swift in Sources */,
+				AAD65D4129549A610089FC85 /* NewItemViewController.swift in Sources */,
 				AA166D302954718600A8BE77 /* AppDelegate.swift in Sources */,
 				AA166D322954718600A8BE77 /* SceneDelegate.swift in Sources */,
+				AAA6802F29700D0B0035BF85 /* HomeViewModel.swift in Sources */,
+				AA08DB7D2954856D00D17ABE /* WLItemListCell.swift in Sources */,
+				AA08DB7B29547F0800D17ABE /* WLItemImageView.swift in Sources */,
+				AAA6803B29704DC50035BF85 /* UIImage+Extensions.swift in Sources */,
+				AA541FAA296D814600C9E782 /* UIFont+Extensions.swift in Sources */,
+				AA874E062977E16600A0DB9E /* CoreDataManager.swift in Sources */,
+				AA922183296C4FA000714286 /* NewItemCategoryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,7 +497,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.WishList;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markokos.WishList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -390,7 +526,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.WishList;
+				PRODUCT_BUNDLE_IDENTIFIER = com.markokos.WishList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -422,12 +558,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		AA166D382954718600A8BE77 /* WishList.xcdatamodeld */ = {
+		AA8E4F452965BAFB00107FE6 /* WishList.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				AA166D392954718600A8BE77 /* WishList.xcdatamodel */,
+				AA8E4F462965BAFB00107FE6 /* WishList.xcdatamodel */,
 			);
-			currentVersion = AA166D392954718600A8BE77 /* WishList.xcdatamodel */;
+			currentVersion = AA8E4F462965BAFB00107FE6 /* WishList.xcdatamodel */;
 			path = WishList.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
