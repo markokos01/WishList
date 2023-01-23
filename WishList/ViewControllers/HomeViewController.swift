@@ -8,14 +8,17 @@
 import UIKit
 import SnapKit
 import CoreData
+import Combine
 
 class HomeViewController: UIViewController, ItemsViewModelDelegate {
     
-    let viewModel = ItemsViewModel()
+    let viewModel = HomeViewModel()
     
     let searchController = UISearchController()
     var collectionView: UICollectionView!
     var editButton = WLEditButton()
+    
+    private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +30,15 @@ class HomeViewController: UIViewController, ItemsViewModelDelegate {
                 
         fetchItems()
         fetchCategories()
+        
+        viewModel.$title.assign(to: \.title, on: self).store(in: &cancellables)
+
+//        viewModel.$title
+//            .sink(receiveValue: { title in
+//                print("did receive title: \(title)")
+//                self.title = title
+//            })
+//            .store(in: &cancellables)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,82 +51,19 @@ class HomeViewController: UIViewController, ItemsViewModelDelegate {
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
-    func setupView() {
+    private func setupView() {
         view.backgroundColor = UIColor.white
+        
         setupNavigationBar()
         setupSearchController()
         setupCollectionView()
-        
-        editButton.delegate = self
-        editButton.mainButton.showsMenuAsPrimaryAction = true
-        editButton.mainButton.preferredMenuElementOrder = .fixed
-        editButton.mainButton.menu = createSortMenu()
+        setupEditButton()
                 
         view.addSubview(collectionView)
         view.addSubview(editButton)
     }
     
-    func setupNavigationBar() {
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        // TODO: Proslijediti odabrani filter
-//        title = viewModel.selectedItemsFilter.rawValue
-//        title = "All"
-        title = viewModel.selectedItemFilter.title
-    }
-    
-    func didChangeItemsFilter() {
-        print("didChangeItemsFilter")
-        // TODO: Proslijediti odabrani filter
-        title = viewModel.selectedItemFilter.title
-        editButton.mainButton.menu = createSortMenu()
-    }
-    
-    func createSortMenu() -> UIMenu {
-        let sortByTitleAction = UIAction(title: "Title", image: UIImage(systemName: "square.stack.3d.up.badge.a"),  state: self.viewModel.selectedSortType == .title ? .on : .off) {action in
-            self.viewModel.selectedSortType = .title
-            self.editButton.mainButton.menu = self.createSortMenu()
-        }
-        
-        let sortByNewestAction = UIAction(title: "Newest", image: UIImage(systemName: "square.stack.3d.up.fill"), state: self.viewModel.selectedSortType == .newest ? .on : .off) { action in
-            self.viewModel.selectedSortType = .newest
-            self.editButton.mainButton.menu = self.createSortMenu()
-        }
-        
-        let sortByOldestAction = UIAction(title: "Oldest", image: UIImage(systemName: "square.stack.3d.up"), state: self.viewModel.selectedSortType == .oldest ? .on : .off) {action in
-            self.viewModel.selectedSortType = .oldest
-            self.editButton.mainButton.menu = self.createSortMenu()
-        }
-        
-        let sortByMenu = UIMenu(title: "SORT BY...", options: .displayInline, children: [sortByTitleAction, sortByNewestAction, sortByOldestAction])
-        
-        let editAction = UIAction(title: "Edit...", image: UIImage(systemName: "list.bullet")) { action in
-            print("didTap editAction")
-            self.setEditing(!self.isEditing, animated: true)
-            self.editButton.isEditing = self.isEditing
-        }
-        
-        let editMenu = UIMenu(title: "", options: .displayInline, children: [editAction])
-        
-        let searchAction = UIAction(title: "Search...", image: UIImage(systemName: "magnifyingglass")) { action in
-            self.searchController.isActive = true
-            self.searchController.searchBar.becomeFirstResponder()
-            self.editButton.isHidden = true
-//            self.searchController.becomeFirstResponder()
-        }
-        
-        let searchMenu = UIMenu(title: "", options: .displayInline, children: [searchAction])
-        
-        var children: [UIMenuElement] = []
-        if self.viewModel.isSortEnabled {
-            children = [sortByMenu, editMenu, searchMenu]
-        } else {
-            children = [editMenu, searchMenu]
-        }
-        
-        return UIMenu(title: "", children: children)
-    }
-    
-    func setupConstraints() {
+    private func setupConstraints() {
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
@@ -124,42 +73,12 @@ class HomeViewController: UIViewController, ItemsViewModelDelegate {
             make.centerY.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-40)
         }
     }
-
-}
-
-extension HomeViewController: CustomEditButtonDelegate {
-    func didTapSelectAllButton() {
-        let totalRows = self.collectionView.numberOfItems(inSection: 0)
-        
-        for row in 0..<totalRows {
-            self.collectionView.selectItem(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: [])
-        }
-    }
     
-    func didTapCancelButton() {
-        self.setEditing(false, animated: true)
-    }
-}
-
-// MARK: - Data
-
-extension HomeViewController {
-    func fetchItems(searchStr: String? = nil) {
-        viewModel.getItems(searchStr: searchStr)
-    }
-    
-    func fetchCategories() {
-        viewModel.getCategories {
-            self.setupNavigationRightMenu()
-        }
-    }
-    
-    func didLoadItems() {
+    private func updateUI() {
         DispatchQueue.main.async {
             if self.viewModel.items.isEmpty {
-                let image = self.viewModel.selectedItemFilter.image
-                let subtitle = self.viewModel.selectedItemFilter.title
-//                let image = UIImage(systemName: "tag", withConfiguration: UIImage.SymbolConfiguration(pointSize: 32, weight: .regular))!
+                let image = self.viewModel.selectedItemFilter?.image
+                let subtitle = self.viewModel.selectedItemFilter?.title
                 // TODO: Proslijediti odabrani filter
                 self.collectionView.showEmptyState(image: image, title: "No items in", subtitle: subtitle)
             } else {
@@ -172,50 +91,33 @@ extension HomeViewController {
             self.collectionView.reloadData()
         }
     }
+
 }
 
-// MARK: - Actions
+// MARK: - Data
 
-extension HomeViewController: NewItemCategoryViewControllerDelegate {
-    @objc func addTapped() {
-        goToAddItem()
+extension HomeViewController {
+    func fetchItems(searchStr: String? = nil) {
+        viewModel.getItems(searchStr: searchStr)
     }
     
-    @objc func newItemCategoryTapped(item: Item) {
-        let newItemCategoryVC = NewItemCategoryViewController()
-        newItemCategoryVC.item = item
-        newItemCategoryVC.delegate = self
-        let nav = UINavigationController(rootViewController: newItemCategoryVC)
-        nav.modalPresentationStyle = .pageSheet
-
-        let smallId = UISheetPresentationController.Detent.Identifier("small")
-        let smallDetent = UISheetPresentationController.Detent.custom(identifier: smallId) { context in
-            return 190
-        }
-        
-        if let sheet = nav.sheetPresentationController {
-            sheet.detents = [smallDetent]
-            sheet.prefersEdgeAttachedInCompactHeight = true
-            sheet.preferredCornerRadius = 10
-//            sheet.largestUndimmedDetentIdentifier = .medium
-        }
-
-        self.present(nav, animated: true, completion: nil)
-        
-//        let newItemVC = NewItemViewController()
-//        newItemVC.delegate = self
-//        let navigationController = UINavigationController(rootViewController: newItemVC)
-//        self.present(navigationController, animated: true)
+    func fetchCategories() {
+        viewModel.getCategories()
     }
     
-    func didSaveCategory() {
-        self.fetchItems()
-        self.fetchCategories()
+    func didLoadItems() {
+        updateUI()
+    }
+    
+    func didLoadCategories() {
+        setupNavigationRightMenu()
     }
 }
 
 // MARK: - Navigation
+
 extension HomeViewController {
+    
     func goToAddItem() {
         let newItemVC = NewItemViewController()
         newItemVC.delegate = self
@@ -236,72 +138,174 @@ extension HomeViewController {
         itemDetailsVC.item = item
         self.navigationController?.pushViewController(itemDetailsVC, animated: true)
     }
+    
 }
 
-// MARK: - Filtering
+// MARK: - Navigation Bar
 
-extension HomeViewController: WishlistViewControllerDelegate {
-    func didTapFilter(_ filter: ItemFilter) {
-        
+extension HomeViewController {
+    
+    func setupNavigationBar() {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     func setupNavigationRightMenu() {
-        let newItemAction = UIAction(title: "New item", image: UIImage(systemName: "plus.circle")) { (_) in
-            self.goToAddItem()
-        }
-        let newItemMenu = UIMenu(options: .displayInline, children: [newItemAction])
-        
-        var actions: [UIAction] = []
-        
-        for itemFilter in itemFilterOptions {
-            let action = UIAction(title: itemFilter.title ?? "", image: itemFilter.image) { (_) in
-                self.viewModel.selectedItemFilter = itemFilter
+        DispatchQueue.main.async {
+            let newItemAction = UIAction(title: "New item", image: UIImage(systemName: "plus.circle")) { (_) in
+                self.goToAddItem()
             }
-            actions.append(action)
+            let newItemMenu = UIMenu(options: .displayInline, children: [newItemAction])
+            
+            var actions: [UIAction] = []
+            
+            for itemFilter in self.viewModel.itemFilterOptions {
+                let action = UIAction(title: itemFilter.title ?? "", image: itemFilter.image) { (_) in
+                    self.viewModel.filterBy(itemFilter) { title in
+//                        self.title = title
+                        self.editButton.mainButton.menu = self.createSortMenu()
+                    }
+                }
+                actions.append(action)
+            }
+            
+            let filtersMenu = UIMenu(options: .displayInline, children: actions)
+            
+            let menu = UIMenu(options: .displayInline, children: [
+                newItemMenu,
+                filtersMenu,
+            ])
+            
+            let custom = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: nil)
+            custom.menu = menu
+            
+            self.navigationItem.rightBarButtonItem = custom
+        }
+    }
+    
+}
+
+// MARK: - Edit Button
+
+extension HomeViewController: CustomEditButtonDelegate {
+    
+    func setupEditButton() {
+        editButton.delegate = self
+        editButton.mainButton.showsMenuAsPrimaryAction = true
+        editButton.mainButton.preferredMenuElementOrder = .fixed
+        editButton.mainButton.menu = createSortMenu()
+    }
+    
+    func createSortMenu() -> UIMenu {
+        let sortByTitleAction = UIAction(title: "Title", image: UIImage(systemName: "square.stack.3d.up.badge.a"), state: self.viewModel.selectedSortType == .title ? .on : .off) {action in
+            self.sortByHandler(.title)
         }
         
-        let filtersMenu = UIMenu(options: .displayInline, children: actions)
+        let sortByNewestAction = UIAction(title: "Newest", image: UIImage(systemName: "square.stack.3d.up.fill"), state: self.viewModel.selectedSortType == .newest ? .on : .off) { action in
+            self.sortByHandler(.newest)
+        }
         
-        let menu = UIMenu(options: .displayInline, children: [
-            newItemMenu,
-            filtersMenu,
-        ])
+        let sortByOldestAction = UIAction(title: "Oldest", image: UIImage(systemName: "square.stack.3d.up"), state: self.viewModel.selectedSortType == .oldest ? .on : .off) {action in
+            self.sortByHandler(.title)
+        }
         
-        let custom = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: nil)
-//        let custom = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(openWishlistView))
-        custom.menu = menu
+        let sortByMenu = UIMenu(title: "SORT BY...", options: .displayInline, children: [sortByTitleAction, sortByNewestAction, sortByOldestAction])
         
+        let editAction = UIAction(title: "Edit...", image: UIImage(systemName: "list.bullet")) { action in
+            self.editHandler()
+        }
         
+        let editMenu = UIMenu(title: "", options: .displayInline, children: [editAction])
         
-        navigationItem.rightBarButtonItem = custom
+        let searchAction = UIAction(title: "Search...", image: UIImage(systemName: "magnifyingglass")) { action in
+            self.searchHandler()
+        }
+        
+        let searchMenu = UIMenu(title: "", options: .displayInline, children: [searchAction])
+        
+        var children: [UIMenuElement] = []
+        if self.viewModel.isSortEnabled {
+            children = [sortByMenu, editMenu, searchMenu]
+        } else {
+            children = [editMenu, searchMenu]
+        }
+        
+        return UIMenu(title: "", children: children)
     }
     
-    @objc func openWishlistView() {
-        let wishlistVC = WishlistViewController()
-        wishlistVC.delegate = self
-        wishlistVC.modalPresentationStyle = .pageSheet
-//        let nav = UINavigationController(rootViewController: wishlistVC)
-//        nav.modalPresentationStyle = .overFullScreen
+    func sortByHandler(_ sortType: ItemSortType) {
+        self.viewModel.sortBy(sortType)
+        self.editButton.mainButton.menu = self.createSortMenu()
+    }
+    
+    func editHandler() {
+        self.setEditing(!self.isEditing, animated: true)
+        self.editButton.isEditing = self.isEditing
+    }
+    
+    func searchHandler() {
+        self.searchController.isActive = true
+        self.searchController.searchBar.becomeFirstResponder()
+        self.editButton.isHidden = true
+    }
+    
+    func didTapSelectAllButton(_ button: WLEditButton) {
+        let totalRows = self.collectionView.numberOfItems(inSection: 0)
         
-//        if let sheet = nav.sheetPresentationController {
-//            sheet.detents = [.medium()]
-//            sheet.prefersGrabberVisible = true
-//        }
+        for row in 0..<totalRows {
+            self.collectionView.selectItem(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: [])
+        }
+    }
+    
+    func didTapCancelButton(_ button: WLEditButton) {
+        self.setEditing(false, animated: true)
+    }
+    
+}
 
-        self.present(wishlistVC, animated: true, completion: nil)
+// MARK: - Handlers
+
+extension HomeViewController {
+    
+}
+
+// MARK: - Actions
+
+extension HomeViewController: NewItemCategoryViewControllerDelegate {
+    
+    @objc func addTapped() {
+        goToAddItem()
     }
     
-    func didTapNewAction() {
-        let newItemVC =  NewItemViewController()
-        newItemVC.delegate = self
-        let nav = UINavigationController(rootViewController: newItemVC)
-        self.present(nav, animated: true)
+    @objc func newItemCategoryTapped(item: Item) {
+        let newItemCategoryVC = NewItemCategoryViewController()
+        newItemCategoryVC.item = item
+        newItemCategoryVC.delegate = self
+        let nav = UINavigationController(rootViewController: newItemCategoryVC)
+        nav.modalPresentationStyle = .pageSheet
+
+        let smallId = UISheetPresentationController.Detent.Identifier("small")
+        let smallDetent = UISheetPresentationController.Detent.custom(identifier: smallId) { context in
+            return 190
+        }
+        
+        if let sheet = nav.sheetPresentationController {
+            sheet.detents = [smallDetent]
+            sheet.prefersEdgeAttachedInCompactHeight = true
+            sheet.preferredCornerRadius = 10
+        }
+
+        self.present(nav, animated: true, completion: nil)
     }
     
+    func didSaveCategory() {
+        self.fetchItems()
+        self.fetchCategories()
+    }
     
 }
 
 // MARK: - NewItemViewControllerDelegate
+
 extension HomeViewController: NewItemViewControllerDelegate {
     func didSave() {
         self.fetchItems()
@@ -309,6 +313,7 @@ extension HomeViewController: NewItemViewControllerDelegate {
 }
 
 // MARK: - Search
+
 extension HomeViewController: UISearchBarDelegate, UISearchResultsUpdating {
     func setupSearchController() {
         searchController.searchResultsUpdater = self
@@ -352,13 +357,10 @@ extension HomeViewController: UISearchBarDelegate, UISearchResultsUpdating {
         self.editButton.isHidden = false
     }
     
-    func didSaveContext() {
-//        self.fetchItems()
-    }
-    
 }
 
 // MARK: - CollectionView
+
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func setupCollectionView() {
         var config = UICollectionLayoutListConfiguration(appearance: .sidebarPlain)
@@ -371,7 +373,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 completion(true)
                 // TODO: Vidjeti jel treba tu obrisati taj redak
 //                self.collectionView.reloadItems(at: [indexPath])
-                self.fetchItems()
             }
             
             let unarchiveHandler: UIContextualAction.Handler = { action, view, completion in
@@ -379,7 +380,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 completion(true)
                 // TODO: Vidjeti jel treba tu obrisati taj redak
 //                self.collectionView.deleteItems(at: [indexPath])
-                self.fetchItems()
             }
             
             let handler = item.isArchived ? unarchiveHandler : archiveHandler
@@ -398,7 +398,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 completion(true)
                 // TODO: Jel treba tu deleteItems?
                 self.collectionView.deleteItems(at: [indexPath])
-                self.fetchItems()
+//                self.fetchItems()
             }
 
             let action = UIContextualAction(style: .destructive, title: nil, handler: deleteHandler)
@@ -450,7 +450,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             let action = UIAction(title: category.name ?? "", image: UIImage(systemName: "tag"), state: state) { action in
                 self.viewModel.toggleItemCategory(item, category: category)
 //                self.collectionView.reloadItems(at: indexPaths)
-                self.fetchItems()
             }
             categoryActions.append(action)
         }
@@ -462,7 +461,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
-        print(indexPaths)
         if indexPaths.isEmpty {
             return nil
         }
@@ -495,7 +493,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             /// Delete Menu
             let deleteAction = UIAction(title: "Delete...", image: UIImage(systemName: "trash"), identifier: nil, discoverabilityTitle: nil, attributes: .destructive) { action in
                 self.viewModel.deleteItem(item)
-                self.fetchItems()
             }
             let deleteMenu = UIMenu(title: "", options: .displayInline, children: [deleteAction])
             
@@ -511,42 +508,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return itemCell
     }
     
-    func setTitle(editing: Bool) {
-        if editing {
-            let selectedCellsCount = collectionView.indexPathsForSelectedItems!.count
-            
-            if selectedCellsCount == 0 {
-                self.title = "Select items"
-            } else {
-                self.title = "\(selectedCellsCount) items"
-            }
-            
-        } else {
-            // TODO: Postaviti odabrani filter
-//            self.title = self.viewModel.selectedItemsFilter.rawValue
-        }
-    }
-    
-    
-    
-}
-
-extension HomeViewController: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("controllerWillChangeContent")
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        print("change section type: \(type)")
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        print("change anObject type: \(type)")
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("controllerDidChangeContent")
-    }
 }
 
 // MARK: - Editing
@@ -555,12 +516,13 @@ extension HomeViewController {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        collectionView.isEditing = editing
-        self.setTitle(editing: editing)
+        self.collectionView.isEditing = editing
+        self.viewModel.isEditing = editing
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.setTitle(editing: self.isEditing)
+        let selectedCellsCount = self.collectionView.indexPathsForSelectedItems!.count
+        self.viewModel.selectItem(count: selectedCellsCount)
         
         if self.isEditing {
             return
@@ -573,7 +535,8 @@ extension HomeViewController {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        self.setTitle(editing: self.isEditing)
+        let selectedCellsCount = self.collectionView.indexPathsForSelectedItems!.count
+        self.viewModel.selectItem(count: selectedCellsCount)
     }
     
 }

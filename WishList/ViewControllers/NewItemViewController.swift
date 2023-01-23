@@ -16,7 +16,7 @@ protocol NewItemViewControllerDelegate: AnyObject {
 
 class NewItemViewController: UIViewController, UINavigationControllerDelegate {
     
-    let viewModel = ItemsViewModel()
+    let viewModel = NewItemViewModel()
     
     var item: Item?
     var images: [UIImage] = []
@@ -195,7 +195,6 @@ extension NewItemViewController: UIImagePickerControllerDelegate {
         _ picker: UIImagePickerController,
         didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
     ) {
-        print("didFinishPicking")
         var newImage: UIImage
 
         if let possibleImage = info[.editedImage] as? UIImage {
@@ -259,14 +258,6 @@ extension NewItemViewController: PHPickerViewControllerDelegate {
         picker.dismiss(animated: true, completion: nil)
         // TODO: Vidjeti zašto se dismissa i cijeli viewcontroller
         for itemProvider in results.map({$0.itemProvider}) {
-            DispatchQueue.main.async {
-                let alert = UIAlertController(title: "Alert", message: "result: \(String(describing: itemProvider))", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-//                      self.dismiss(animated: true)
-                }))
-                self.present(alert, animated: true, completion: nil)
-            }
-            
             if itemProvider.hasItemConformingToTypeIdentifier(UTType.webP.identifier) {
                 itemProvider.loadDataRepresentation(forTypeIdentifier: UTType.webP.identifier) {data, err in
                     if let data = data, let img = UIImage.init(data: data) {

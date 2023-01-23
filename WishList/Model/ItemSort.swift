@@ -8,14 +8,14 @@
 import Foundation
 import UIKit
 
-enum SortType {
+enum ItemSortType {
     case title
     case newest
     case oldest
 }
 
 struct ItemSort {
-    let type: SortType
+    let type: ItemSortType
     let title: String
     let sortDescriptior: NSSortDescriptor
 }

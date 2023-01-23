@@ -12,10 +12,10 @@ import SnapKit
              
 protocol CustomEditButtonDelegate: AnyObject {
 //    func didTapMainButton()
-    func didTapSelectAllButton()
+    func didTapSelectAllButton(_ button: WLEditButton)
 //    func didTapTagButton()
 //    func didTapDeleteButton()
-    func didTapCancelButton()
+    func didTapCancelButton(_ button: WLEditButton)
 }
    
 class WLEditButton: UIView {
@@ -162,7 +162,7 @@ class WLEditButton: UIView {
         config.buttonSize = .small
         config.imagePlacement = .trailing
         selectAllButton = UIButton(configuration: config, primaryAction: UIAction(handler: {(action) in
-            self.delegate?.didTapSelectAllButton()
+            self.delegate?.didTapSelectAllButton(self)
         }))
     }
     
@@ -195,7 +195,7 @@ class WLEditButton: UIView {
         cancelButton = UIButton(configuration: config, primaryAction: UIAction(handler: { (action) in
             print("cancelButton tap")
             self.isEditing = false
-            self.delegate?.didTapCancelButton()
+            self.delegate?.didTapCancelButton(self)
         }))
     }
 

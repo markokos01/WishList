@@ -22,8 +22,8 @@ extension Item {
             return nil
         }
         
-        var categoriesSet = categories as! Set<Category>
-        var sortedCategories = categoriesSet.sorted { $0.name ?? "" < $1.name ?? "" }
+        let categoriesSet = categories as! Set<Category>
+        let sortedCategories = categoriesSet.sorted { $0.name ?? "" < $1.name ?? "" }
         return sortedCategories.map { $0.name ?? "" }.lazy.joined(separator: ", ")
     }
     

@@ -15,7 +15,7 @@ protocol NewItemCategoryViewControllerDelegate: AnyObject {
 class NewItemCategoryViewController: UIViewController {
     
     var item: Item?
-    let viewModel = ItemsViewModel()
+    let viewModel = HomeViewModel()
     weak var delegate: NewItemViewControllerDelegate?
     
     private let customNavigationBar: WLNavigationBarView = {
